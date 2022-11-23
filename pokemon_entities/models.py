@@ -12,3 +12,5 @@ class Pokemon(models.Model):
 class PokemonEntity(models.Model):
     lat = models.FloatField()
     lon = models.FloatField()
+    appeared_at = models.DateTimeField(null=True)
+    disappeared_at = models.DateTimeField(null=True)
