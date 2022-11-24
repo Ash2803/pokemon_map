@@ -19,3 +19,4 @@ class PokemonEntity(models.Model):
     attack = models.IntegerField(null=True)
     defense = models.IntegerField(null=True)
     stamina = models.IntegerField(null=True)
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, null=True)
