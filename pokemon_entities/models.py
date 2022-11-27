@@ -6,7 +6,7 @@ class Pokemon(models.Model):
     picture = models.ImageField(null=True)
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
 
 
 class PokemonEntity(models.Model):
@@ -20,3 +20,6 @@ class PokemonEntity(models.Model):
     defense = models.IntegerField(null=True)
     stamina = models.IntegerField(null=True)
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.pokemon.title
