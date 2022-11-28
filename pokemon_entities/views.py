@@ -71,6 +71,7 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon_entities.pokemon.id,
             'img_url': request.build_absolute_uri(requested_pokemon.picture.url),
             'title_ru': requested_pokemon.title,
+            'description': requested_pokemon.description,
             "lvl": pokemon_entities.level,
             "lat": pokemon_entities.lat,
             "lon": pokemon_entities.lon
