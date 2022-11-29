@@ -2,11 +2,11 @@ from django.db import models  # noqa F401
 
 
 class Pokemon(models.Model):
-    title = models.TextField(max_length=200)
-    title_eng = models.TextField(max_length=30, blank=True)
-    title_jp = models.TextField(max_length=30, blank=True)
-    picture = models.ImageField(null=True)
-    description = models.TextField(max_length=400, blank=True)
+    title = models.TextField(max_length=200, verbose_name="Название на русском")
+    title_eng = models.TextField(max_length=30, blank=True, verbose_name="Название на английском")
+    title_jp = models.TextField(max_length=30, blank=True, verbose_name="Название на японском")
+    picture = models.ImageField(null=True, verbose_name="Картинка")
+    description = models.TextField(max_length=400, blank=True, verbose_name="Описание")
     previous_evolution = models.ForeignKey("self", on_delete=models.SET_NULL,
                                            null=True,
                                            blank=True,
@@ -19,16 +19,19 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
-    lat = models.FloatField()
-    lon = models.FloatField()
-    appeared_at = models.DateTimeField(null=True)
-    disappeared_at = models.DateTimeField(null=True)
-    level = models.IntegerField(null=True)
-    health = models.IntegerField(null=True)
-    attack = models.IntegerField(null=True)
-    defense = models.IntegerField(null=True)
-    stamina = models.IntegerField(null=True)
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, null=True, related_name='pokemons')
+    lat = models.FloatField(verbose_name="Широта")
+    lon = models.FloatField(verbose_name="Долгота")
+    appeared_at = models.DateTimeField(null=True, verbose_name="Появился в")
+    disappeared_at = models.DateTimeField(null=True, verbose_name="Исчез в")
+    level = models.IntegerField(null=True, verbose_name="Уровень")
+    health = models.IntegerField(null=True, verbose_name="Здоровье")
+    attack = models.IntegerField(null=True, verbose_name="Атака")
+    defense = models.IntegerField(null=True, verbose_name="Защита")
+    stamina = models.IntegerField(null=True, verbose_name="Выносливость")
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE,
+                                null=True,
+                                related_name='pokemons',
+                                verbose_name="Покемон")
 
     def __str__(self):
         return self.pokemon.title
