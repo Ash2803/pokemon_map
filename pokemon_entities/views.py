@@ -67,6 +67,7 @@ def show_pokemon(request, pokemon_id):
             pokemon_entities.lon,
             request.build_absolute_uri(pokemon_entities.pokemon.picture.url)
         )
+
         pokemons_on_page.update({
             'pokemon_id': pokemon_entities.pokemon.id,
             'img_url': request.build_absolute_uri(requested_pokemon.picture.url),
@@ -76,8 +77,16 @@ def show_pokemon(request, pokemon_id):
             'description': requested_pokemon.description,
             "lvl": pokemon_entities.level,
             "lat": pokemon_entities.lat,
-            "lon": pokemon_entities.lon
+            "lon": pokemon_entities.lon,
         })
+        if requested_pokemon.previous_evolution:
+            pokemons_on_page.update({
+            "previous_evolution": {
+                'title_ru': requested_pokemon.previous_evolution.title,
+                'pokemon_id': requested_pokemon.previous_evolution.id,
+                'img_url': request.build_absolute_uri(requested_pokemon.previous_evolution.picture.url)
+            }
+            })
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemons_on_page
     })
