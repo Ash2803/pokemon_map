@@ -1,6 +1,5 @@
 import folium
-from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.timezone import localtime
 
 from pokemon_entities.models import Pokemon, PokemonEntity
@@ -29,9 +28,9 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 def show_all_pokemons(request):
     local_time = localtime()
     pokemons = Pokemon.objects.all()
-    pokemon_entities = pokemons.entities.filter(disappeared_at__gt=local_time,
-                                                appeared_at__lt=local_time
-                                                )
+    pokemon_entities = PokemonEntity.objects.filter(disappeared_at__gt=local_time,
+                                                    appeared_at__lt=local_time
+                                                    )
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities:
         add_pokemon(
@@ -55,10 +54,8 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    requested_pokemon = Pokemon.objects.get(id=pokemon_id)
+    requested_pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     pokemons_entities = requested_pokemon.entities.all()
-    if requested_pokemon.id != int(pokemon_id):
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     pokemons_on_page = {}
     for pokemon_entities in pokemons_entities:
@@ -82,20 +79,20 @@ def show_pokemon(request, pokemon_id):
         })
         if requested_pokemon.previous_evolution:
             pokemons_on_page.update({
-            "previous_evolution": {
-                'title_ru': requested_pokemon.previous_evolution.title,
-                'pokemon_id': requested_pokemon.previous_evolution.id,
-                'img_url': request.build_absolute_uri(requested_pokemon.previous_evolution.picture.url)
-            }
+                "previous_evolution": {
+                    'title_ru': requested_pokemon.previous_evolution.title,
+                    'pokemon_id': requested_pokemon.previous_evolution.id,
+                    'img_url': request.build_absolute_uri(requested_pokemon.previous_evolution.picture.url)
+                }
             })
         next_pokemon = requested_pokemon.next_evolutions.first()
         if next_pokemon:
             pokemons_on_page.update({
-            "next_evolution": {
-                'title_ru': next_pokemon.title,
-                'pokemon_id': next_pokemon.id,
-                'img_url': request.build_absolute_uri(next_pokemon.picture.url)
-            }
+                "next_evolution": {
+                    'title_ru': next_pokemon.title,
+                    'pokemon_id': next_pokemon.id,
+                    'img_url': request.build_absolute_uri(next_pokemon.picture.url)
+                }
             })
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemons_on_page
