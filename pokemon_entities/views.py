@@ -58,24 +58,24 @@ def show_pokemon(request, pokemon_id):
     pokemons_entities = requested_pokemon.entities.all()
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     pokemons_on_page = {}
-    for pokemon_entities in pokemons_entities:
+    for pokemon_entity in pokemons_entities:
         add_pokemon(
             folium_map,
-            pokemon_entities.lat,
-            pokemon_entities.lon,
-            request.build_absolute_uri(pokemon_entities.pokemon.picture.url)
+            pokemon_entity.lat,
+            pokemon_entity.lon,
+            request.build_absolute_uri(pokemon_entity.pokemon.picture.url)
         )
 
         pokemons_on_page.update({
-            'pokemon_id': pokemon_entities.pokemon.id,
+            'pokemon_id': pokemon_entity.pokemon.id,
             'img_url': request.build_absolute_uri(requested_pokemon.picture.url),
             'title_ru': requested_pokemon.title,
             'title_en': requested_pokemon.title_eng,
             'title_jp': requested_pokemon.title_jp,
             'description': requested_pokemon.description,
-            "lvl": pokemon_entities.level,
-            "lat": pokemon_entities.lat,
-            "lon": pokemon_entities.lon,
+            "lvl": pokemon_entity.level,
+            "lat": pokemon_entity.lat,
+            "lon": pokemon_entity.lon,
         })
         if requested_pokemon.previous_evolution:
             pokemons_on_page.update({
