@@ -30,7 +30,6 @@ class PokemonEntity(models.Model):
     stamina = models.IntegerField(null=True, verbose_name="Выносливость")
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE,
                                 null=True,
-                                related_name='pokemons',
                                 verbose_name="Покемон")
 
     def __str__(self):
